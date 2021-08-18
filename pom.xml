@@ -26,6 +26,7 @@
       <scope>test</scope>
     </dependency>
 
+<!--    This dependency tells JDBC how Mysql implements there interfaces.  -->
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>
       <groupId>mysql</groupId>
