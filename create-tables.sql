@@ -52,7 +52,7 @@ CREATE TABLE book_loan (
 );
 
 
--- SETTING FOREIGN KEY etc.
+-- SETTING FOREIGN KEY etc. (Relationships)
 
 ALTER TABLE details
     ADD CONSTRAINT FK_DETAILS_APPUSER FOREIGN KEY (app_user_id)
