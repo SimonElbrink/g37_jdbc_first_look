@@ -1,4 +1,4 @@
-package se.lexicon.simon;
+package se.lexicon.simon.data;
 
 import se.lexicon.simon.db.MySQLConnection;
 
@@ -51,10 +51,6 @@ public class AppUserDAO {
         } catch (SQLException ex){
             ex.printStackTrace();
         }
-
-
-
-
 
     }
 
