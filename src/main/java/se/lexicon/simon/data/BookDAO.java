@@ -28,7 +28,7 @@ public interface BookDAO {
     boolean delete(int bookId);
 
     //Bonus
-    void clear();
+    boolean clear();
 
 
 

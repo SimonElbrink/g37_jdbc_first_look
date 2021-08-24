@@ -31,9 +31,11 @@ public class App
 //        boolean wasCreated = bookDao.create(book);
 //        System.out.println(wasCreated);
 
-        boolean wasDeleted = bookDao.delete(5);
+//        boolean wasDeleted = bookDao.delete(5);
+//
+//        System.out.println("wasDeleted = " + wasDeleted);
 
-        System.out.println("wasDeleted = " + wasDeleted);
+        System.out.println(bookDao.clear());
 
 
     }

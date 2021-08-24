@@ -11,8 +11,8 @@ DELETE FROM details WHERE app_user_id = 3;
 DELETE FROM app_user WHERE app_user_id = 3;
 
 -- clear the Tables
-TRUNCATE TABLE details;
-TRUNCATE TABLE app_user;
+DELETE FROM details;
+DELETE FROM app_user;
 
 -- Create
 INSERT INTO app_user (app_user_id, username, password, reg_date)

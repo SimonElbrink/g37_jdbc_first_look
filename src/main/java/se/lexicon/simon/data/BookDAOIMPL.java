@@ -236,7 +236,35 @@ public class BookDAOIMPL implements BookDAO {
 
     //TODO
     @Override
-    public void clear() {
+    public boolean clear() {
 
+        String clearBooksSQL = "DELETE FROM book";
+        String findAll = "SELECT * FROM book";
+        Connection connection = null;
+        PreparedStatement preparedStatement1 = null;
+        PreparedStatement preparedStatement2 = null;
+        ResultSet resultSet2 = null;
+        boolean empty = false;
+
+
+        try {
+            connection = MySQLConnection.getInstance().getConnection();
+
+            preparedStatement2 = connection.prepareStatement(findAll);
+            resultSet2 = preparedStatement2.executeQuery();
+
+            if (resultSet2.next()){
+
+                preparedStatement1 = connection.prepareStatement(clearBooksSQL);
+                empty = preparedStatement1.executeUpdate() >= 1;
+            }else{
+                empty = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return empty;
     }
 }
