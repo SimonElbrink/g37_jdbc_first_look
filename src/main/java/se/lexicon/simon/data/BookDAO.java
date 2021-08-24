@@ -10,7 +10,7 @@ public interface BookDAO {
     //CRUD
 
     //Create
-    boolean create(Book book);
+    Book persist(Book book);
 
     //Read's
     Collection<Book> findAll();

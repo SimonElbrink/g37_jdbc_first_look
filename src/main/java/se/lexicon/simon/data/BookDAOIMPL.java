@@ -10,27 +10,33 @@ import java.util.Collection;
 
 public class BookDAOIMPL implements BookDAO {
 
-    //TODO REFACTOR with Return Type of "Book".
-    @Override
-    public boolean create(Book book) {
+    public Book persist(Book book) {
 
         String createSQL = "INSERT INTO book (isbn, title, max_loan_days) VALUES (?,?,?)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         int rowsAffected = 0;
+        Book createdBook = null;
 
         try {
             connection = MySQLConnection.getInstance().getConnection();
 
             LocalDate time = LocalDate.now();
 
-            preparedStatement = connection.prepareStatement(createSQL);
+            preparedStatement = connection.prepareStatement(createSQL, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, book.getIsbn());
             preparedStatement.setString(2, book.getTitle());
             preparedStatement.setInt(3, book.getMaxLoanDays());
 
 
             rowsAffected = preparedStatement.executeUpdate();
+
+            resultSet = preparedStatement.getGeneratedKeys();
+
+            if (resultSet.next()){
+                book.setId(resultSet.getInt(1));
+            }
 
         }
         catch (SQLIntegrityConstraintViolationException exception){
@@ -41,11 +47,7 @@ public class BookDAOIMPL implements BookDAO {
         }
 
 
-        if (rowsAffected >= 1){
-            return true;
-        }else {
-            return false;
-        }
+        return book;
     }
 
     @Override
@@ -196,11 +198,51 @@ public class BookDAOIMPL implements BookDAO {
         return bookFound;
     }
 
-    //TODO
     @Override
     public Book update(Book book) {
-        return null;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int rowsAffected = 0;
+        Book updatedBook = null;
+
+        try{
+            connection = MySQLConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement("UPDATE book SET isbn = ?, title = ?, max_loan_days = ? WHERE book_id = ?");
+            preparedStatement.setString(1, book.getIsbn());
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setInt(3, book.getMaxLoanDays());
+            preparedStatement.setInt(4, book.getId());
+
+             rowsAffected = preparedStatement.executeUpdate();
+
+             preparedStatement.close();
+
+//             preparedStatement = connection.prepareStatement("SELECT * FROM book WHERE book_id = ?");
+//             preparedStatement.setInt(1, book.getId());
+//             ResultSet resultSet = preparedStatement.executeQuery();
+//
+//             if (resultSet.next()){
+//                 updatedBook = new Book(
+//                         resultSet.getInt("book_id"),
+//                         resultSet.getString("isbn"),
+//                         resultSet.getString("title"),
+//                         resultSet.getInt("max_loan_days")
+//                 );
+//             }
+
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
+
+
+        if (rowsAffected >= 1){
+            return book;
+        }else {
+            return null;
+        }
     }
+
 
     @Override
     public boolean delete(int bookId) {
@@ -234,29 +276,27 @@ public class BookDAOIMPL implements BookDAO {
         return wasDeleted;
     }
 
-    //TODO
     @Override
     public boolean clear() {
 
         String clearBooksSQL = "DELETE FROM book";
         String findAll = "SELECT * FROM book";
         Connection connection = null;
-        PreparedStatement preparedStatement1 = null;
-        PreparedStatement preparedStatement2 = null;
-        ResultSet resultSet2 = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         boolean empty = false;
 
 
         try {
             connection = MySQLConnection.getInstance().getConnection();
 
-            preparedStatement2 = connection.prepareStatement(findAll);
-            resultSet2 = preparedStatement2.executeQuery();
+            preparedStatement = connection.prepareStatement(findAll);
+            resultSet = preparedStatement.executeQuery();
 
-            if (resultSet2.next()){
-
-                preparedStatement1 = connection.prepareStatement(clearBooksSQL);
-                empty = preparedStatement1.executeUpdate() >= 1;
+            if (resultSet.next()){
+                preparedStatement.close();
+                preparedStatement = connection.prepareStatement(clearBooksSQL);
+                empty = preparedStatement.executeUpdate() >= 1;
             }else{
                 empty = true;
             }

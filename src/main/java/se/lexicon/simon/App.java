@@ -35,7 +35,27 @@ public class App
 //
 //        System.out.println("wasDeleted = " + wasDeleted);
 
-        System.out.println(bookDao.clear());
+//        System.out.println(bookDao.clear());
+
+        //Create Book Locally in java program
+       Book book = new Book(0,"jdj3j", "The Hobbit", 14);
+
+       //Persisting to DataBase
+       book = bookDao.persist(book);
+
+       //Print out
+        System.out.println("CREATED book = " + book);
+
+////        book.setMaxLoanDays(30);
+//
+//        //Change Book Locally
+//        book.setTitle("The Hobbit 1");
+////
+//        //Updating Book in DB
+//        book = bookDao.update(book);
+//
+//        // print out book.
+//        System.out.println("UPDATED book = " + book);
 
 
     }
